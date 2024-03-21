@@ -500,13 +500,22 @@ const restaurants = [
   },
   // Add more restaurants as needed
 ];
-
 function Home() {
   const [cuisine, setCuisine] = useState("");
   const [price, setPrice] = useState("");
   const [distance, setDistance] = useState(undefined);
   const [recommendation, setRecommendation] = useState("");
-
+  //sort the array form farthest to closest
+  restaurants.sort((a, b) => a.distance - b.distance);
+  //take the array and sort it in to different arrays using the cuisine key
+  const cuisineArray = restaurants.reduce((acc, obj) => {
+    let key = obj.cuisine;
+    if (!acc[key]) {
+      acc[key] = [];
+    }
+    acc[key].push(obj);
+    return acc;
+  }, {});
   const recommendRestaurant = () => {
     // Loop through the restaurants
     for (const restaurant of restaurants) {
@@ -535,9 +544,9 @@ function Home() {
         className="text-black"
       >
         <option value="">Select preferred cuisine</option>
-        {restaurants.map((restaurant, index) => (
-          <option key={index} value={restaurant.cuisine}>
-            {restaurant.cuisine}
+        {Object.keys(cuisineArray).map((cuisine, index) => (
+          <option key={index} value={cuisine}>
+            {cuisine}
           </option>
         ))}
       </select>
